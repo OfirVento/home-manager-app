@@ -22,14 +22,14 @@ export async function simulateAgentResponse(input: string) {
                     type: 'worker',
                     title: 'מריה ל.',
                     experience: '7 שנות ניסיון | בתים פרטיים',
-                    strengths: ['יסודית ושקטה', 'נשארת עד שהכול גמור'],
-                    price: '75 ₪ לשעה',
-                    availability: 'זמינות: חמישי 09:00',
+                    strengths: ['ניקיון יסודי ושקט', 'נשארת עד שהכול גמור, גם אם צריך יותר זמן'],
+                    price: '80 ₪ לשעה',
+                    availability: 'זמינות: מחר 08:00–11:00',
                     verification_text: 'ת"ז + כתובת מאומתת, אמינות: 0 ביטולים ב־60 יום',
-                    local_proof_text: '👥 עבד עם 12 אנשים באזור שלך',
-                    external_ratings: ['⭐️ מידרג: 4.9 (14)'],
-                    recommendation_quote: "לא הולכת לפני שהכל נקי.",
-                    recommendation_author: "נועה",
+                    local_proof_text: '👥 עבד עם 15 אנשים באזור שלך',
+                    external_ratings: ['⭐️ מידרג: 4.6 (14) | המקצוענים: 4.5 (9)'],
+                    recommendation_quote: "תמיד מוצא איך להסתדר, גם בהתראה קצרה.",
+                    recommendation_author: "זאב, נתניה",
                     buttons: [
                         { label: 'לבחור את מריה', action: 'select_maria', style: 'primary' },
                         { label: 'לא מתאים', action: 'dismiss_maria' }
@@ -37,33 +37,16 @@ export async function simulateAgentResponse(input: string) {
                 },
                 {
                     type: 'worker',
-                    title: 'אולגה ק.',
-                    experience: '10 שנות ניסיון',
-                    strengths: ['ניקיונות גדולים', 'בלי קיצורי דרך'],
-                    price: '70 ₪ לשעה',
-                    availability: 'זמינות: חמישי 10:00',
-                    verification_text: 'מאומתת',
-                    local_proof_text: '👥 עבדה ב-8 בתים',
-                    external_ratings: ['⭐️ מידרג: 4.7'],
-                    recommendation_quote: "לניקיון רציני.",
-                    recommendation_author: "רותם",
-                    buttons: [
-                        { label: 'לבחור את אולגה', action: 'select_olga', style: 'primary' },
-                        { label: 'לא מתאים', action: 'dismiss_olga' }
-                    ]
-                },
-                {
-                    type: 'worker',
                     title: 'אלכס מ.',
                     experience: '5 שנות ניסיון',
-                    strengths: ['זמינות גבוהה', 'יעיל'],
+                    strengths: ['זמינות גבוהה והתאמה מהירה לשינויים', 'עובד בקצב טוב ושומר על סדר תוך כדי'],
                     price: '80 ₪ לשעה',
-                    availability: 'זמינות: מחר 08:00',
-                    verification_text: 'מאומת',
-                    local_proof_text: '👥 עבד עם 15 אנשים',
-                    external_ratings: ['⭐️ מידרג: 4.6'],
-                    recommendation_quote: "מסתדר תמיד.",
-                    recommendation_author: "יואב",
+                    availability: 'זמינות: מחר 11:00–14:00',
+                    verification_text: 'ת"ז + כתובת מאומתת, אמינות: 0 ביטולים ב־60 יום',
+                    local_proof_text: '👥 עבד עם 12 אנשים באזור שלך',
+                    external_ratings: ['⭐️ מידרג: 4.8 (20) | המקצוענים: 4.7 (10)'],
+                    recommendation_quote: "עובד יסודי, מגיע בזמן.",
+                    recommendation_author: "רותם, רעננה",
                     buttons: [
                         { label: 'לבחור את אלכס', action: 'select_alex', style: 'primary' },
                         { label: 'לא מתאים', action: 'dismiss_alex' }
@@ -76,10 +59,7 @@ export async function simulateAgentResponse(input: string) {
 
     // 3. Selection
     if (txt.includes('select') || txt.includes('לבחור') || txt.includes('בחרתי')) {
-        let name = 'מריה ל.';
-        if (txt.includes('alex') || txt.includes('אלכס')) name = 'אלכס מ.';
-        if (txt.includes('olga') || txt.includes('אולגה')) name = 'אולגה ק.';
-
+        const name = txt.includes('maria') || txt.includes('מריה') ? 'מריה' : 'אלכס';
         return {
             assistant_message: `מעולה! אני סוגר לך את ${name}. \n\nמסכם את ההעדפות שלך לפני יצירת קשר:`,
             quick_replies: ['מאשר, צור קשר', 'לערוך העדפות']
