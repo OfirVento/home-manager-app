@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
+import { simulateAgentResponse } from './simulation';
 
 export default function Page() {
   // --- STATE & LOGIC COPIED FROM OLD YoniView ---
@@ -49,17 +50,10 @@ export default function Page() {
     setTimeout(() => setAgentStatus('checking'), 800);
     setTimeout(() => setAgentStatus('typing'), 1800);
 
-    try {
-      const res = await fetch('http://localhost:3001/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, homeId: 1, history: messages.map(m => ({ role: m.role, parts: [{ text: m.text }] })) })
-      });
-      const data = await res.json();
-
-      // Delay slightly to finish animation cycle if response is too fast
-      await new Promise(r => setTimeout(r, 2000));
-
+    // Helper to process response
+    const handleAgentResponse = async (data: any) => {
+      // Delay slightly for effect
+      await new Promise(r => setTimeout(r, 1000));
       setAgentStatus('idle');
 
       if (data.assistant_message) {
@@ -71,9 +65,25 @@ export default function Page() {
         }]);
       }
       if (data.quick_replies) setQuickReplies(data.quick_replies);
+    };
+
+    try {
+      // Try to reach the local backend
+      const res = await fetch('http://localhost:3001/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, homeId: 1, history: messages.map(m => ({ role: m.role, parts: [{ text: m.text }] })) })
+      });
+      if (!res.ok) throw new Error("Backend unreachable");
+
+      const data = await res.json();
+      await handleAgentResponse(data);
+
     } catch (err) {
-      setAgentStatus('idle');
-      setMessages(prev => [...prev, { id: Date.now() + 1, role: "assistant", text: "שגיאה בתקשורת" }]);
+      console.log("Backend failed, switching to Client Simulation for Demo");
+      // Fallback: Simulate response if backend is offline (e.g., GitHub Pages)
+      const simulatedData = await simulateAgentResponse(text);
+      await handleAgentResponse(simulatedData);
     }
   }
 
