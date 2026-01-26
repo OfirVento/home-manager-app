@@ -2,7 +2,6 @@ export async function simulateAgentResponse(input: string) {
     // Delay to mimic network
     await new Promise(r => setTimeout(r, 600));
 
-    // Normalize
     const txt = input.toLowerCase();
 
     // 1. Initial / Cleaner Request
@@ -13,7 +12,7 @@ export async function simulateAgentResponse(input: string) {
         };
     }
 
-    // 2. Date Selection -> Show Cards
+    // 2. Date Selection -> Show Workers (Maria, Olga, Alex)
     if (txt.includes('מחר') || txt.includes('חמישי') || txt.includes('בהקדם') || txt.includes('09:00')) {
         return {
             assistant_message: `מצאתי 3 אפשרויות טובות. תגיד לי מה דעתך:`,
@@ -74,23 +73,76 @@ export async function simulateAgentResponse(input: string) {
         };
     }
 
-    // 3. Selection
+    // 3. Selection -> AUTOMATIC FLOW (Summary + Contact + Cards)
     if (txt.includes('select') || txt.includes('לבחור') || txt.includes('בחרתי')) {
         let name = 'מריה ל.';
-        if (txt.includes('alex') || txt.includes('אלכס')) name = 'אלכס מ.';
-        if (txt.includes('olga') || txt.includes('אולגה')) name = 'אולגה ק.';
+        let price = '75 ₪';
+        if (txt.includes('alex') || txt.includes('אלכס')) { name = 'אלכס מ.'; price = '80 ₪'; }
+        if (txt.includes('olga') || txt.includes('אולגה')) { name = 'אולגה ק.'; price = '70 ₪'; }
 
         return {
-            assistant_message: `מעולה! אני סוגר לך את ${name}. \n\nמסכם את ההעדפות שלך לפני יצירת קשר:`,
-            quick_replies: ['מאשר, צור קשר', 'לערוך העדפות']
+            assistant_message: `מעולה! אני סוגר לך את ${name}..
+
+מסכם את ההעדפות שלך לפני יצירת קשר:
+מחפש ניקיון
+מבקש להגיע "יום חמישי 09:00"
+ומעוניין ליצור קשר עם ${name}
+
+יוצר קשר עם ${name}...
+אעדכן בדקות הקרובות ⏳`,
+            quick_replies: ['מאשר', 'מעוניין לעדכן'],
+            cards: [
+                {
+                    type: 'worker',
+                    title: `יוצר קשר עם ${name}`,
+                    image_url: 'https://cdn-icons-png.flaticon.com/512/3686/3686930.png',
+                    experience: 'יוצר קשר...',
+                    strengths: ['ממתין לאישור...'],
+                    price: 'בעבודה ⏳',
+                    availability: 'מיד',
+                    buttons: []
+                },
+                {
+                    type: 'worker',
+                    title: 'התקבל אישור! 🎉',
+                    image_url: 'https://cdn-icons-png.flaticon.com/512/148/148767.png',
+                    experience: 'ההזמנה אושרה סופית',
+                    strengths: [`הגעה: יום חמישי 09:00`, `כתובת: רוטשילד 62`, `מחיר: ${price} לשעה`],
+                    price: 'אושר ✅',
+                    availability: 'חמישי 09:00',
+                    buttons: []
+                },
+                {
+                    type: 'worker',
+                    title: 'תזכורת למחר ⏰',
+                    image_url: 'https://cdn-icons-png.flaticon.com/512/2921/2921222.png',
+                    experience: 'תזכורת מערכת',
+                    strengths: [`תזכורת הגעה: יום חמישי 09:00`, 'קאפיש?'],
+                    price: 'ללא עלות',
+                    availability: 'מחר',
+                    buttons: [{ label: 'מאשר', action: 'confirm_reminder' }, { label: 'מעוניין לעדכן', action: 'update_reminder' }]
+                }
+            ]
         };
     }
 
-    // 4. Confirmation
-    if (txt.includes('מאשר') || txt.includes('confirm')) {
+    // 4. Final Confirmation (Yalla)
+    if (txt.includes('confirm') || txt.includes('מאשר')) {
         return {
-            assistant_message: 'בוצע! 🎉 \nשלחתי את הפרטים לנותן השירות, אעדכן אותך ברגע שיהיה אישור סופי.',
-            quick_replies: ['תודה!', 'חזרה לתפריט ראשי']
+            assistant_message: "נתראה! 👋",
+            cards: [
+                {
+                    type: 'worker',
+                    title: `יאללה לעבודה!`,
+                    image_url: 'https://cdn-icons-png.flaticon.com/512/3072/3072480.png',
+                    experience: '✨ זמן לקסמים ✨',
+                    strengths: ['תתחילי לנקות הבית מבולגן', '3 ילדים, אוכל על הרצפה'],
+                    price: 'בהצלחה! 💪',
+                    availability: 'עכשיו',
+                    buttons: []
+                }
+            ],
+            quick_replies: []
         };
     }
 
