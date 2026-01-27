@@ -82,7 +82,7 @@ export default function Page() {
     } catch (err) {
       console.log("Backend failed, switching to Client Simulation for Demo");
       // Fallback: Simulate response if backend is offline (e.g., GitHub Pages)
-      const simulatedData = await simulateAgentResponse(text);
+      const simulatedData = await simulateAgentResponse(text, messages);
       await handleAgentResponse(simulatedData);
     }
   }
