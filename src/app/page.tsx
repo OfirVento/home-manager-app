@@ -112,7 +112,7 @@ export default function Page() {
           <p className="text-lg text-gray-500 font-medium">בדיקת פלואו שיחה מול לקוח קצה</p>
           <p className="pt-2">
             <a
-              href="/cally.html"
+              href={`${process.env.NODE_ENV === 'production' ? '/home-manager-app' : ''}/cally.html`}
               dir="ltr"
               className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 underline underline-offset-4"
             >
